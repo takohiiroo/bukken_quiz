@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: bukken_quiz_db 
+    env_file: .env
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    container_name: bukken_quiz_web 
+    volumes:
+      - ./app:/app  # ホストのappディレクトリをマウント
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - .env  # ← .env を使う
+    # コンテナ起動時にDjangoプロジェクトを生成（既存でない場合）
+    command: >
+      sh -c "
+        if [ ! -f /app/manage.py ]; then
+          pip install django &&
+          django-admin startproject bukken_quiz_web /app &&
+          cd /app &&
+          python manage.py migrate
+        fi &&
+        gunicorn --bind 0.0.0.0:8000 bukken_quiz_web.wsgi:application
+      "
+
+volumes:
+  db_data:
