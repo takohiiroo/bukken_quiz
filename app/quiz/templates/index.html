@@ -8,13 +8,23 @@
 </head>
 <body>
     <h1>物件価格当てゲーム</h1>
-    <button onclick="startQuiz()">クイズスタート</button>
+    <div id="start-screen">
+        <button onclick="startGame()">クイズスタート</button>
+    </div>
 
     <div id="quiz-area" style="display: none;">
+        <h2 id="player-turn"></h2>
         <p id="bukken-info"></p>
         <input type="number" id="answer-input" placeholder="予想金額（円）">
         <button onclick="submitAnswer()">決定</button>
         <p id="result"></p>
+    </div>
+
+    <div id="final-result" style="display: none;">
+        <h2>ゲーム終了！</h2>
+        <p id="score-a"></p>
+        <p id="score-b"></p>
+        <h3 id="winner"></h3>
     </div>
 </body>
 </html>
