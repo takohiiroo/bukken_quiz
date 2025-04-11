@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>物件価格当てゲーム</title>
+    <script src="{% static 'js/main.js' %}" defer></script>
+</head>
+<body>
+    <h1>物件価格当てゲーム</h1>
+    <button onclick="startQuiz()">クイズスタート</button>
+
+    <div id="quiz-area" style="display: none;">
+        <p id="bukken-info"></p>
+        <input type="number" id="answer-input" placeholder="予想金額（円）">
+        <button onclick="submitAnswer()">決定</button>
+        <p id="result"></p>
+    </div>
+</body>
+</html>
+
