@@ -26,7 +26,7 @@ function startTurn() {
                 住所: ${data.data_home.address}<br>
                 最寄り駅: ${data.data_home.station}<br>
                 築年数: ${data.data_home.age}<br>
-                階数: ${data.data_room.floor}<br>
+                階数: ${data.data_room.room_floor}<br>
                 間取り: ${data.data_room.layout}<br>
                 面積: ${data.data_room.size}
             `;
@@ -49,7 +49,7 @@ function submitAnswer() {
 
     scores[player] += points;
     document.getElementById('result').innerText =
-        `正解は ${correctAnswer} 円！${player}さんの差は ${diff} 円 → ${points}ポイント加算！`;
+        `正解は ${correctAnswer} 円！${player}さんの差は ${diff} 円 → ${points}ダメージ！`;
 
     totalTurns += 1;
 

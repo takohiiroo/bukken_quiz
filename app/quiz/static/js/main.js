@@ -49,7 +49,7 @@ function submitAnswer() {
 
     scores[player] += points;
     document.getElementById('result').innerText =
-        `正解は ${correctAnswer} 円！${player}さんの差は ${diff} 円 → ${points}ポイント加算！`;
+        `正解は ${correctAnswer} 円！${player}さんの差は ${diff} 円 → ${points}ダメージ！`;
 
     totalTurns += 1;
 
