@@ -31,6 +31,16 @@ h2, h3 {
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
 }
+#bukken_mei {
+    font-weight: bold;
+    font-size: 2rem;
+    margin: 0;
+}
+
+iframe {
+    width: 100%;
+    height: 350px;
+}
 
 /* ===== 入力・セレクト ===== */
 input[type="text"],
@@ -68,6 +78,10 @@ button:hover {
     background-color: #388e3c;
 }
 
+#kettei_btn {
+    margin: auto;
+}
+
 /* ===== ローディングオーバーレイ（中央配置） ===== */
 #loading-overlay {
     position: fixed;
@@ -98,6 +112,10 @@ button:hover {
 }
 
 /* ===== 結果表示 ===== */
+#after-reveal{
+    position: relative;
+}
+
 #result {
     margin-top: 1rem;
     font-size: 1rem;
@@ -108,6 +126,91 @@ button:hover {
     color: #2d3436;
 }
 
+.seikaiha {
+    font-size: 1.3rem;
+}
+
+.seikai {
+    font-size: 2.1rem;
+    font-weight: bold;
+}
+
+.stamp {
+    position: relative;
+}
+
+.perfect::before {
+    content: "Perfect!!";
+    font-size: 0.8em;
+    color: #DC143C;
+    font-style: italic;
+    border-radius: 0.3em;
+    border: 0.1em solid #DC143C;
+    padding: 0.1em 0.5em;
+    position: absolute;
+    left: 45%;
+    transform: rotate(-12deg);
+}
+
+.great::before {
+    content: "Great!";
+    font-size: 0.8em;
+    color: #DC143C;
+    font-style: italic;
+    border-radius: 0.3em;
+    border: 0.1em solid #DC143C;
+    padding: 0.1em 0.5em;
+    position: absolute;
+    left: 45%;
+    transform: rotate(-12deg);
+}
+
+.good::before {
+    content: "Good!";
+    font-size: 0.8em;
+    color: #DC143C;
+    font-style: italic;
+    border-radius: 0.3em;
+    border: 0.1em solid #DC143C;
+    padding: 0.1em 0.5em;
+    position: absolute;
+    left: 45%;
+    transform: rotate(-12deg);
+}
+
+.soso::before {
+    content: "So so...";
+    font-size: 0.8em;
+    color: #0000ff;
+    font-style: italic;
+    border-radius: 0.3em;
+    border: 0.1em solid #0000ff;
+    padding: 0.1em 0.5em;
+    position: absolute;
+    left: 45%;
+    transform: rotate(-12deg);
+}
+
+.bad::before {
+    content: "Bad...";
+    font-size: 0.8em;
+    color: #0000ff;
+    font-style: italic;
+    border-radius: 0.3em;
+    border: 0.1em solid #0000ff;
+    padding: 0.1em 0.5em;
+    position: absolute;
+    left: 45%;
+    transform: rotate(-12deg);
+}
+
+.diff_price {
+    font-size: 1.9em;
+}
+
+.so-damage {
+    font-size: 1.3em;
+}
 /* ===== 予想入力ブロック ===== */
 #quiz-area div {
     margin: 1rem 0;
@@ -147,4 +250,74 @@ button:hover {
         padding: 1.5rem;
     }
 }
+/* =====カルーセル===== */
+.carousel {
+    width: 100%;
+    margin: 1rem auto;
+    overflow: hidden;
+    position: relative;
+    border-radius: 12px;
+}
 
+.carousel img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    transition: opacity 0.5s ease;
+}
+
+/* カルーセル全体の中央寄せと固定サイズ */
+#image-carousel-wrapper {
+    margin: 1rem 0;
+    position: relative;
+    height: 400px;
+}
+
+#image-carousel {
+    width: 100%;
+    height: 400px;
+    position: absolute;
+    overflow: hidden;
+    background-color: #fafafa;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 0; 
+}
+
+/* 画像を縦横比維持してリサイズ */
+.carousel-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: none;
+    position: absolute;
+}
+
+/* ボタンスタイル */
+.carousel-btn {
+    background-color: rgba(255,255,255,0.8);
+    border: none;
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+    margin: 0 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: background-color 0.2s ease;
+    top: 50%;
+    position: absolute;
+}
+
+.carousel-btn:hover {
+    background-color: #ddd;
+}
+
+#carousel-prev {
+    left: 2px;
+    z-index: 1;
+}
+
+#carousel-next {
+    right: 2px;
+    z-index: 1;
+}

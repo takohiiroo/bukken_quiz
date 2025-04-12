@@ -37,19 +37,24 @@
 
     <div id="quiz-area" style="display: none;">
         <h2 id="round-info"></h2>
+        <div id="image-carousel-wrapper">
+            <button id="carousel-prev" class="carousel-btn">←</button>
+            <div id="image-carousel" class="carousel"></div>
+            <button id="carousel-next" class="carousel-btn">→</button>
+        </div>
         <p id="bukken-info"></p>
 
         <div>
             <h3 id="player-a-label"></h3>
-            <input type="number" id="answer-a" placeholder="予想金額（円）">
+            <input type="number" id="answer-a" placeholder="賃料 + 管理費（円）">
         </div>
 
         <div>
             <h3 id="player-b-label"></h3>
-            <input type="number" id="answer-b" placeholder="予想金額（円）">
+            <input type="number" id="answer-b" placeholder="賃料 + 管理費（円）">
         </div>
 
-        <button onclick="submitBothAnswers()">決定</button>
+        <button id="kettei_btn" style="display: none;" onclick="submitBothAnswers()">決定</button>
         <p id="result"></p>
 
         <button id="next-round-btn" style="display: none;" onclick="proceedToNextRound()">次のラウンドへ</button>

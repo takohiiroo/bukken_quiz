@@ -2,6 +2,7 @@ import random
 import requests
 from bs4 import BeautifulSoup
 from django.http import JsonResponse
+import urllib
 
 def get_bukken(request):
     #最大10回までリトライ
@@ -28,6 +29,8 @@ def get_bukken(request):
                 "&sngz=&po1=09&pc=50"
                 f"&page={page_num}"
             )
+
+            abs_url = "https://suumo.jp/chintai/"
     
             headers = {
                 'User-Agent': 'Mozilla/5.0'
@@ -62,6 +65,7 @@ def get_bukken(request):
             kanri = td[3].select_one('.cassetteitem_price--administration').get_text(strip=True)
             deposit = td[4].select_one('.cassetteitem_price--deposit').get_text(strip=True)
             gratuity = td[4].select_one('.cassetteitem_price--gratuity').get_text(strip=True)
+            get_url = td[8].find(class_= 'js-cassette_link_href').get('href')
     
             # 家賃・管理費を数値に変換
             if '万円' in rent:
@@ -83,6 +87,9 @@ def get_bukken(request):
                 #return JsonResponse({'error': '管理費の形式が不正です（"円"を含む必要があります）'}, status=400)
                 continue
 
+            #リンク作成
+            url = urllib.parse.urljoin(abs_url, get_url) 
+
             data_room = {
                 'room_floor': room_floor,
                 'rent': rent,
@@ -91,6 +98,8 @@ def get_bukken(request):
                 'gratuity': gratuity,
                 'layout': td[5].select_one('.cassetteitem_madori').get_text(strip=True),
                 'size': td[5].select_one('.cassetteitem_menseki').get_text(strip=True),
+                'url': url,
+                'img_urls': td[1].find(class_= 'js-view_gallery_images').get('data-imgs')
             }
     
             return JsonResponse({
