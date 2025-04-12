@@ -4,20 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <title>物件価格当てゲーム</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'js/main.js' %}" defer></script>
 </head>
 <body>
+    <div id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
     <h1>物件価格当てゲーム</h1>
+
     <div id="start-screen">
+        <label>プレイヤー1の名前（<span id="a-placeholder">Aさん</span>）:
+            <input type="text" id="player-a-name" placeholder="Aさん" oninput="updateNameLabel('A')">
+        </label><br>
+
+        <label>プレイヤー2の名前（<span id="b-placeholder">Bさん</span>）:
+            <input type="text" id="player-b-name" placeholder="Bさん" oninput="updateNameLabel('B')">
+        </label><br>
+
+        <label>ラウンド数:
+            <select id="round-count">
+                <option value="3">3</option>
+                <option value="5" selected>5</option>
+                <option value="7">7</option>
+                <option value="10">10</option>
+            </select>
+        </label><br><br>
+
         <button onclick="startGame()">クイズスタート</button>
     </div>
 
     <div id="quiz-area" style="display: none;">
-        <h2 id="player-turn"></h2>
+        <h2 id="round-info"></h2>
         <p id="bukken-info"></p>
-        <input type="number" id="answer-input" placeholder="予想金額（円）">
-        <button onclick="submitAnswer()">決定</button>
+
+        <div>
+            <h3 id="player-a-label"></h3>
+            <input type="number" id="answer-a" placeholder="予想金額（円）">
+        </div>
+
+        <div>
+            <h3 id="player-b-label"></h3>
+            <input type="number" id="answer-b" placeholder="予想金額（円）">
+        </div>
+
+        <button onclick="submitBothAnswers()">決定</button>
         <p id="result"></p>
+
+        <button id="next-round-btn" style="display: none;" onclick="proceedToNextRound()">次のラウンドへ</button>
     </div>
 
     <div id="final-result" style="display: none;">
@@ -25,6 +60,7 @@
         <p id="score-a"></p>
         <p id="score-b"></p>
         <h3 id="winner"></h3>
+        <button onclick="retryGame()">もう一度プレイする</button>
     </div>
 </body>
 </html>

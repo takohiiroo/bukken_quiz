@@ -1,24 +1,58 @@
 let correctAnswer = 0;
 let round = 1;
-let turn = 0; // 0 = A, 1 = B
-let totalTurns = 0;
+let totalRounds = 5;
 let scores = { A: 0, B: 0 };
+let playerNames = { A: 'Aさん', B: 'Bさん' };
 
-function startGame() {
-    document.getElementById('start-screen').style.display = 'none';
-    startTurn();
+function updateNameLabel(player) {
+    const value = document.getElementById(`player-${player.toLowerCase()}-name`).value.trim();
+    document.getElementById(`${player.toLowerCase()}-placeholder`).innerText = value || `${player}さん`;
 }
 
-function startTurn() {
-    document.getElementById('result').innerText = '';
-    document.getElementById('answer-input').value = '';
+function startGame() {
+    const nameA = document.getElementById('player-a-name').value.trim();
+    const nameB = document.getElementById('player-b-name').value.trim();
+    playerNames.A = nameA || 'Aさん';
+    playerNames.B = nameB || 'Bさん';
 
-    const player = turn === 0 ? 'A' : 'B';
-    document.getElementById('player-turn').innerText = `${player}さんのターン（ラウンド ${round}）`;
+    totalRounds = parseInt(document.getElementById('round-count').value);
+
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('final-result').style.display = 'none';
+    round = 1;
+    scores = { A: 0, B: 0 };
+    startRound();
+}
+
+function showLoading() {
+    document.getElementById('loading-overlay').style.display = 'flex';
+}
+
+function hideLoading() {
+    document.getElementById('loading-overlay').style.display = 'none';
+}
+
+
+function startRound() {
+    showLoading();
+    document.getElementById('result').innerText = '';
+    document.getElementById('next-round-btn').style.display = 'none';
+    document.getElementById('answer-a').value = '';
+    document.getElementById('answer-b').value = '';
+
+    document.getElementById('quiz-area').style.display = 'block';
+    document.getElementById('round-info').innerText = `第 ${round} ラウンド`;
+
+    document.getElementById('player-a-label').innerText = `${playerNames.A}の予想`;
+    document.getElementById('player-b-label').innerText = `${playerNames.B}の予想`;
+
+    // 読み込みインジケーター表示
+    document.getElementById('bukken-info').innerHTML = '';
 
     fetch('/quiz/api/get_bukken/')
         .then(response => response.json())
         .then(data => {
+            hideLoading();
             correctAnswer = data.answer;
 
             const info = `
@@ -31,37 +65,46 @@ function startTurn() {
                 面積: ${data.data_room.size}
             `;
             document.getElementById('bukken-info').innerHTML = info;
-            document.getElementById('quiz-area').style.display = 'block';
+        })
+        .catch(err => {
+            hideLoading();
+            alert("エラーが発生しました。")
         });
 }
 
-function submitAnswer() {
-    const input = document.getElementById('answer-input').value;
-    const userAnswer = parseInt(input);
-    if (isNaN(userAnswer)) {
-        alert("数字を入力してください！");
+function submitBothAnswers() {
+    const inputA = parseInt(document.getElementById('answer-a').value);
+    const inputB = parseInt(document.getElementById('answer-b').value);
+
+    if (isNaN(inputA) || isNaN(inputB)) {
+        alert("両方のプレイヤーが金額を入力してください！");
         return;
     }
 
-    const diff = Math.abs(userAnswer - correctAnswer);
-    const player = turn === 0 ? 'A' : 'B';
-    const points = round * diff;
+    const diffA = Math.abs(inputA - correctAnswer);
+    const diffB = Math.abs(inputB - correctAnswer);
 
-    scores[player] += points;
-    document.getElementById('result').innerText =
-        `正解は ${correctAnswer} 円！${player}さんの差は ${diff} 円 → ${points}ダメージ！`;
+    const pointsA = round * diffA;
+    const pointsB = round * diffB;
 
-    totalTurns += 1;
+    scores.A += pointsA;
+    scores.B += pointsB;
 
-    if (turn === 1) {
-        round += 1;
-    }
+    document.getElementById('result').innerHTML = `
+        正解は ${correctAnswer} 円！<br>
+        ${playerNames.A} の差: ${diffA} 円 → ${pointsA} ダメージ<br>
+        ${playerNames.B} の差: ${diffB} 円 → ${pointsB} ダメージ
+    `;
 
-    if (totalTurns >= 10) {
+    document.getElementById('next-round-btn').style.display = 'inline-block';
+}
+
+function proceedToNextRound() {
+    round++;
+    if (round > totalRounds) {
         endGame();
     } else {
-        turn = (turn + 1) % 2;
-        setTimeout(startTurn, 2500); // 次のターンへ（ちょっと待ってから切り替え）
+        startRound();
     }
 }
 
@@ -69,18 +112,24 @@ function endGame() {
     document.getElementById('quiz-area').style.display = 'none';
     document.getElementById('final-result').style.display = 'block';
 
-    document.getElementById('score-a').innerText = `Aさんの合計ポイント: ${scores.A}`;
-    document.getElementById('score-b').innerText = `Bさんの合計ポイント: ${scores.B}`;
+    document.getElementById('score-a').innerText = `${playerNames.A}の合計ポイント: ${scores.A}`;
+    document.getElementById('score-b').innerText = `${playerNames.B}の合計ポイント: ${scores.B}`;
 
     let winnerText;
     if (scores.A < scores.B) {
-        winnerText = "🎉 Aさんの勝ち！";
+        winnerText = `🎉 ${playerNames.A} の勝ち！`;
     } else if (scores.B < scores.A) {
-        winnerText = "🎉 Bさんの勝ち！";
+        winnerText = `🎉 ${playerNames.B} の勝ち！`;
     } else {
         winnerText = "🤝 引き分け！";
     }
 
     document.getElementById('winner').innerText = winnerText;
 }
+
+function retryGame() {
+    document.getElementById('start-screen').style.display = 'block';
+    document.getElementById('final-result').style.display = 'none';
+}
+
 
