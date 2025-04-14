@@ -8,6 +8,33 @@ let currentUrl = '';
 let bukkenName = '';
 let gameMode = 'multi';
 
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    const logo = document.getElementById("logo");
+    if (logo) {
+      logo.style.animation = "fuwafuwa 3s ease-in-out infinite";
+    }
+  }, 2000);
+});
+
+
+function enterGame() {
+    const fade = document.getElementById('fade');
+
+    fade.classList.add('fade-in');
+    setTimeout(() => {
+        document.getElementById('logo').style.cssText = "height: 10%;";
+        document.getElementById('select-screen').style.display = 'block';
+        document.getElementById('enter-screen').style.display = 'none';
+    
+        fade.classList.remove('fade-in');
+        fade.classList.add('fade-out');
+        setTimeout(() => {
+            fade.classList.remove('fade-out');
+        }, 600);
+    }, 600);
+}
+
 function updatePlayerCount() {
     const count = parseInt(document.getElementById('player-count').value);
     playerCount = count;
@@ -54,7 +81,7 @@ function startGame() {
     }
 
     round = 1;
-    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('select-screen').style.display = 'none';
     document.getElementById('final-result').style.display = 'none';
 
     startRound();
@@ -275,7 +302,7 @@ function endGame() {
 }
 
 function retryGame() {
-    document.getElementById('start-screen').style.display = 'block';
+    document.getElementById('select-screen').style.display = 'block';
     document.getElementById('final-result').style.display = 'none';
 }
 

@@ -14,14 +14,22 @@
 
     <div id="logo"><img src="{% static 'img/logo_test.png' %}"></div>
 
-    <div id="start-screen">
+    <div class="cloud"></div>
+
+    <div id="fade" class="fade-overlay"></div>
+
+    <div id="enter-screen">
+        <button id="start-button" onclick="enterGame()">START</button>
+    </div>
+
+    <div id="select-screen" style="display: none;">
         <!-- ▼ プレイヤー人数だけに統一 -->
         <label>
             <select id="player-count" onchange="updatePlayerCount()" required>
                 <option value="" selected disabled>人数を選択してください。</option>
                 <option value="1">Solo</option>
                 <option value="2">Duel</option>
-                <option value="3">Triad Clush</option>
+                <option value="3">Triad Clash</option>
                 <option value="4">Quad Rumble</option>
                 <option value="5">Pentabrawl</option>
             </select>
@@ -38,7 +46,14 @@
             </select>
         </label><br><br>
 
-        <button onclick="startGame()">クイズスタート</button>
+        <button id="mode-button" onclick="modeSelect()">モード選択</button>
+        <div id="mode-screen" style="display: none;">
+            <div id="mode-ichiran">
+                
+            </div>
+        </div>
+
+        <button id="game-start-button" onclick="startGame()">クイズスタート</button>
     </div>
 
     <div id="quiz-area" style="display: none;">
@@ -59,7 +74,6 @@
     </div>
 
     <div id="final-result" style="display: none;"></div>
-    <div class="cloud"></div>
 </body>
 </html>
 
