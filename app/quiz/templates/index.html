@@ -3,7 +3,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>物件価格当てゲーム</title>
+    <title>The Price of Rent</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'js/main.js' %}" defer></script>
 </head>
@@ -12,16 +12,22 @@
         <div class="loader"></div>
     </div>
 
-    <h1>物件価格当てゲーム</h1>
+    <div id="logo"><img src="{% static 'img/logo_test.png' %}"></div>
 
     <div id="start-screen">
-        <label>プレイヤー1の名前（<span id="a-placeholder">Aさん</span>）:
-            <input type="text" id="player-a-name" placeholder="Aさん" oninput="updateNameLabel('A')">
-        </label><br>
+        <!-- ▼ プレイヤー人数だけに統一 -->
+        <label>
+            <select id="player-count" onchange="updatePlayerCount()" required>
+                <option value="" selected disabled>人数を選択してください。</option>
+                <option value="1">Solo</option>
+                <option value="2">Duel</option>
+                <option value="3">Triad Clush</option>
+                <option value="4">Quad Rumble</option>
+                <option value="5">Pentabrawl</option>
+            </select>
+        </label><br><br>
 
-        <label>プレイヤー2の名前（<span id="b-placeholder">Bさん</span>）:
-            <input type="text" id="player-b-name" placeholder="Bさん" oninput="updateNameLabel('B')">
-        </label><br>
+        <div id="player-inputs"></div>
 
         <label>ラウンド数:
             <select id="round-count">
@@ -44,15 +50,7 @@
         </div>
         <p id="bukken-info"></p>
 
-        <div>
-            <h3 id="player-a-label"></h3>
-            <input type="number" id="answer-a" placeholder="賃料 + 管理費（円）">
-        </div>
-
-        <div>
-            <h3 id="player-b-label"></h3>
-            <input type="number" id="answer-b" placeholder="賃料 + 管理費（円）">
-        </div>
+        <div id="player-answers"></div>
 
         <button id="kettei_btn" style="display: none;" onclick="submitBothAnswers()">決定</button>
         <p id="result"></p>
@@ -60,13 +58,8 @@
         <button id="next-round-btn" style="display: none;" onclick="proceedToNextRound()">次のラウンドへ</button>
     </div>
 
-    <div id="final-result" style="display: none;">
-        <h2>ゲーム終了！</h2>
-        <p id="score-a"></p>
-        <p id="score-b"></p>
-        <h3 id="winner"></h3>
-        <button onclick="retryGame()">もう一度プレイする</button>
-    </div>
+    <div id="final-result" style="display: none;"></div>
+    <div class="cloud"></div>
 </body>
 </html>
 
