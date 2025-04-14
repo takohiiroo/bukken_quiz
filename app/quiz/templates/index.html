@@ -14,11 +14,10 @@
 
     <div id="logo"><img src="{% static 'img/logo_test.png' %}"></div>
 
-    <div class="cloud"></div>
-
     <div id="fade" class="fade-overlay"></div>
 
-    <div id="enter-screen">
+    <div id="enter-screen" style="display: block;">
+        <div class="cloud"></div>
         <button id="start-button" onclick="enterGame()">START</button>
     </div>
 
@@ -31,7 +30,6 @@
                 <option value="2">Duel</option>
                 <option value="3">Triad Clash</option>
                 <option value="4">Quad Rumble</option>
-                <option value="5">Pentabrawl</option>
             </select>
         </label><br><br>
 
@@ -46,11 +44,19 @@
             </select>
         </label><br><br>
 
-        <button id="mode-button" onclick="modeSelect()">モード選択</button>
+        <button id="mode-button" onclick="modeSelect()">MODE</button>
         <div id="mode-screen" style="display: none;">
-            <div id="mode-ichiran">
-                
-            </div>
+            <input type="radio" name="player-count" value="1" id="solo" onclick="updatePlayerCount(1)">
+            <label for="solo" id="solo-label"><img src="static/img/solo.jpg" alt="1 player"></label>
+        
+            <input type="radio" name="player-count" value="2" id="duel" onclick="updatePlayerCount(2)">
+            <label for="duel" id="duel-label"><img src="static/img/duel.jpg" alt="2 players"></label>
+        
+            <input type="radio" name="player-count" value="3" id="triad" onclick="updatePlayerCount(3)">
+            <label for="triad" id="triad-label"><img src="static/img/triad.jpg" alt="3 players"></label>
+        
+            <input type="radio" name="player-count" value="4" id="quad" onclick="updatePlayerCount(4)">
+            <label for="quad" id="quad-label"><img src="static/img/quad.jpg" alt="4 players"></label>
         </div>
 
         <button id="game-start-button" onclick="startGame()">クイズスタート</button>

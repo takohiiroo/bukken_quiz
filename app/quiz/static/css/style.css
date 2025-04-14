@@ -8,13 +8,6 @@ body {
     height: 100vh;
     width: 100vw;
 
-    background-image: url('https://videos.openai.com/vg-assets/assets%2Ftask_01jrqw97w4fbks5mqjk3s8jvmt%2Fimg_0.webp?st=2025-04-13T14%3A28%3A01Z&se=2025-04-19T15%3A28%3A01Z&sks=b&skt=2025-04-13T14%3A28%3A01Z&ske=2025-04-19T15%3A28%3A01Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=maRaqOXLnkGltDgMRTFBEyyR31HmBGSKcPljvhYHxUI%3D&az=oaivgprodscus');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-color: rgba(0, 0, 0, 0.5);
-    background-blend-mode: overlay;
     overflow-x: hidden;
 }
 
@@ -88,6 +81,7 @@ body {
 #logo {
     height: 50%;
     position: relative;
+    z-index: 1;
 }
 
 #logo img {
@@ -171,7 +165,6 @@ h2, h3 {
 }
 
 /* ===== コンテナ共通 ===== */
-#select-screen,
 #quiz-area,
 #final-result {
     background-color: white;
@@ -186,7 +179,92 @@ h2, h3 {
 
 #enter-screen {
     transition: all 0.3s ease;
-    z-index: 5; 
+    z-index: 0; 
+    background-image: url('/static/img/enter_bg.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: overlay;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#select-screen {
+    z-index:0;
+}
+
+#select-screen::before {
+    contint: '';
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    position: absolute;
+    top: 0;
+    left:0;
+    background: url('/static/img/select_bg.JPEG');
+/*
+    background-image: url('/static/img/select_bg.JPEG');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    background-blend-mode: overlay;
+*/
+}
+
+#mode-screen {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 6;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#mode-screen label {
+    width: 40%;
+    height: 40%;
+    position: absolute;
+}
+
+#mode-screen input {
+    display: none;
+}
+
+#mode-screen img {
+    width: 100%;
+    position: absolute;
+}
+
+#solo-label,
+#solo-label img {
+    top: 5%;
+    left: 5%;
+}
+
+#duel-label, 
+#duel-label img {
+    top: 5%;
+    right: 5%;
+}
+
+#triad-label,
+#triad-label img {
+    bottom: 5%;
+    left: 5%;
+}
+
+#quad-label,
+#quad-label img {
+    bottom: 5%;
+    right: 5%;
 }
 
 #bukken_mei {
@@ -249,6 +327,12 @@ button:hover {
     background-color: green;
     left: 2%;
     bottom: 2%;
+}
+
+#mode-screen {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 #game-start-button {

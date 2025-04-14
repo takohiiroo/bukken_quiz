@@ -17,22 +17,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 2000);
 });
 
+const bglight = document.getElementById('start-button');
+bglight.addEventListener("mouseover", () => {
+    document.getElementById('enter-screen').style.backgroundColor = 'transparent';
+});
+bglight.addEventListener("mouseleave", () => {
+    document.getElementById('enter-screen').style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+});
 
 function enterGame() {
     const fade = document.getElementById('fade');
+    document.getElementById('enter-screen').style.display = 'none';
 
     fade.classList.add('fade-in');
     setTimeout(() => {
         document.getElementById('logo').style.cssText = "height: 10%;";
         document.getElementById('select-screen').style.display = 'block';
-        document.getElementById('enter-screen').style.display = 'none';
     
         fade.classList.remove('fade-in');
         fade.classList.add('fade-out');
         setTimeout(() => {
             fade.classList.remove('fade-out');
         }, 600);
-    }, 600);
+    }, 800);
 }
 
 function updatePlayerCount() {
@@ -48,13 +55,19 @@ function updatePlayerCount() {
         container.appendChild(document.createElement('br'));
     }
 }
-
+/*
 function updateNameLabel(index) {
     const value = document.getElementById(`player-${index}-name`).value.trim();
     document.getElementById(`p${index}-placeholder`).innerText = value || `P${index + 1}`;
 }
-
-
+*/
+function modeSelect() {
+    document.getElementById('mode-screen').style.display = 'block';
+    document.getElementById('mode-button').style.filter = 'blur(6px)';
+    document.getElementById('game-start-button').style.filter = 'blur(6px)';
+    document.getElementById('game-start-button').style.filter = 'blur(6px)';
+    document.getElementById('logo').style.filter = 'blur(6px)';
+}
 
 function showLoading() {
     document.getElementById('loading-overlay').style.display = 'flex';
