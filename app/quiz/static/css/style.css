@@ -20,7 +20,7 @@ body {
     background: url('/static/img/clouds_seamless.png');
     background-size: cover;
     animation: cloud 400s linear infinite;
-    opacity: 0.6;
+    opacity: 0.35;
     z-index: -1;
 }
 
@@ -33,7 +33,7 @@ body {
     height:100%;
     background: url('/static/img/clouds_seamless.png');
     background-size: cover;
-    opacity:0.9;
+    opacity:0.35;
     animation: cloud-reverse 300s linear infinite;
 }
 
@@ -80,8 +80,10 @@ body {
 
 #logo {
     height: 50%;
-    position: relative;
+    position: absolute;
     z-index: 1;
+    bottom: 50%;
+    left: 50%;
 }
 
 #logo img {
@@ -180,7 +182,7 @@ h2, h3 {
 #enter-screen {
     transition: all 0.3s ease;
     z-index: 0; 
-    background-image: url('/static/img/enter_bg.webp');
+    background-image: url('/static/img/bg/6_e.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -195,74 +197,92 @@ h2, h3 {
 }
 
 #select-screen {
-    z-index:0;
-}
-
-#select-screen::before {
-    contint: '';
     width: 100%;
     height: 100%;
-    z-index: 5;
+    z-index: 0;
     position: absolute;
     top: 0;
     left:0;
-    background: url('/static/img/select_bg.JPEG');
-/*
-    background-image: url('/static/img/select_bg.JPEG');
+    background-image: url('/static/img/bg/1_e.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-color: rgba(0, 0, 0, 0.5);
     background-blend-mode: overlay;
-*/
 }
 
-#mode-screen {
+#window {
+    width: 100vw;
+    height: 100vh;
+    background-image: url('/static/img/bg/window.png');
+    background-repeat: no-repeat;
+    background-size: calc(100vw / 0.76) auto; /* ←画像の幅を拡大して窓を画面幅に合わせる */
+    background-position: center center;        /* 中央の窓が画面中央に来るように */
+}
+
+
+.four-buttons {
     width: 100%;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    z-index: 6;
-    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.85);
 }
 
-#mode-screen label {
+.four-buttons label {
     width: 40%;
     height: 40%;
     position: absolute;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-blend-mode: overlay;
 }
 
-#mode-screen input {
-    display: none;
-}
-
-#mode-screen img {
-    width: 100%;
-    position: absolute;
-}
-
-#solo-label,
-#solo-label img {
+#solo-label {
+    background-image: url('/static/img/solo.jpg');
     top: 5%;
     left: 5%;
 }
 
-#duel-label, 
-#duel-label img {
+#duel-label {
+    background-image: url('/static/img/duel.jpg');
     top: 5%;
     right: 5%;
 }
 
-#triad-label,
-#triad-label img {
+#triad-label {
+    background-image: url('/static/img/triad.jpg');
     bottom: 5%;
     left: 5%;
 }
+#quad-label {
+    background-image: url('/static/img/quad.jpg');
+    bottom: 5%;
+    right: 5%;
+}
 
-#quad-label,
-#quad-label img {
+#round3 {
+    background-color: red;
+    top: 5%;
+    left: 5%;
+}
+
+#round5 {
+    background-color: white;
+    top: 5%;
+    right: 5%;
+}
+
+#round7 {
+    background-color: blue;
+    bottom: 5%;
+    left: 5%;
+}
+#round10 {
+    background-color: green;
     bottom: 5%;
     right: 5%;
 }
@@ -319,30 +339,53 @@ button:hover {
     margin: auto;
 }
 
-#mode-button {
+#select-buttons {
     position: absolute;
-    margin: 0;
-    width: 25%;
-    height: 25%;
-    background-color: green;
-    left: 2%;
-    bottom: 2%;
+    height: 90%;
+    width: 95%;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 
-#mode-screen {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+.mode-round-buttons {
+    position: absolute;
+    padding: 0%;
+    margin: 0;
+    width: 10rem;
+    height: 10rem;
+    background-color: green;
+    left: 1rem;
+    bottom: 2rem;
+    border: #2d3436 0.3rem solid;
+}
+
+#mode-button {
+}
+
+.select-migigawa{
+    position: absolute;
+    margin: 0;
+    width: 70%;
+    height: 90%;
+    background-color: rgba(255, 255, 255, 0.1);
+    right: 2%;
+    top: 50%;
+    border: #2d3436 0.3rem solid;
+}
+
+#round-button {
 }
 
 #game-start-button {
     position: absolute;
     margin: 0;
-    width: 25%;
-    height: 25%;
+    width: 10rem;
+    height: 10rem;
     background-color: green;
-    right: 2%;
-    bottom: 2%;
+    right: 1rem;
+    bottom: 2rem;
+    border: #2d3436 0.3rem solid;
 }
 
 /* ===== ローディングオーバーレイ（中央配置） ===== */

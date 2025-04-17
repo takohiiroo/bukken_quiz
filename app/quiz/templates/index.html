@@ -21,45 +21,35 @@
         <button id="start-button" onclick="enterGame()">START</button>
     </div>
 
+    <div class="four-buttons" id="mode-screen" style="display: none;">
+        <label id="solo-label"></label>
+
+        <label id="duel-label"></label>
+ 
+        <label id="triad-label"></label>
+ 
+        <label id="quad-label"></label>
+    </div>
+
+    <div class="four-buttons" id="round-screen" style="display: none;">
+        <label id="round3">3ラウンド</label>
+
+        <label id="round5">5ラウンド</label>
+ 
+        <label id="round7">7ラウンド</label>
+ 
+        <label id="round10">10ラウンド</label>
+    </div>
+
     <div id="select-screen" style="display: none;">
+        <div id="window"></div>
         <!-- ▼ プレイヤー人数だけに統一 -->
-        <label>
-            <select id="player-count" onchange="updatePlayerCount()" required>
-                <option value="" selected disabled>人数を選択してください。</option>
-                <option value="1">Solo</option>
-                <option value="2">Duel</option>
-                <option value="3">Triad Clash</option>
-                <option value="4">Quad Rumble</option>
-            </select>
-        </label><br><br>
-
-        <div id="player-inputs"></div>
-
-        <label>ラウンド数:
-            <select id="round-count">
-                <option value="3">3</option>
-                <option value="5" selected>5</option>
-                <option value="7">7</option>
-                <option value="10">10</option>
-            </select>
-        </label><br><br>
-
-        <button id="mode-button" onclick="modeSelect()">MODE</button>
-        <div id="mode-screen" style="display: none;">
-            <input type="radio" name="player-count" value="1" id="solo" onclick="updatePlayerCount(1)">
-            <label for="solo" id="solo-label"><img src="static/img/solo.jpg" alt="1 player"></label>
-        
-            <input type="radio" name="player-count" value="2" id="duel" onclick="updatePlayerCount(2)">
-            <label for="duel" id="duel-label"><img src="static/img/duel.jpg" alt="2 players"></label>
-        
-            <input type="radio" name="player-count" value="3" id="triad" onclick="updatePlayerCount(3)">
-            <label for="triad" id="triad-label"><img src="static/img/triad.jpg" alt="3 players"></label>
-        
-            <input type="radio" name="player-count" value="4" id="quad" onclick="updatePlayerCount(4)">
-            <label for="quad" id="quad-label"><img src="static/img/quad.jpg" alt="4 players"></label>
-        </div>
-
-        <button id="game-start-button" onclick="startGame()">クイズスタート</button>
+            <div id="select-buttons">
+                <!-- <div class="select-migigawa" id="player-inputs"></div> -->
+                <button class="mode-round-buttons" id="mode-button" onclick="modeSelect()">MODE</button>
+                <!-- <button class="mode-round-buttons" id="round-button" onclick="roundSelect()">ROUND</button> -->
+                <button id="game-start-button" onclick="startGame()">START</button>
+            </div>
     </div>
 
     <div id="quiz-area" style="display: none;">

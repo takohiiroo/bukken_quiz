@@ -31,7 +31,13 @@ function enterGame() {
 
     fade.classList.add('fade-in');
     setTimeout(() => {
-        document.getElementById('logo').style.cssText = "height: 10%;";
+        const logo = document.getElementById("logo");
+        logo.style.height = "5rem";
+        logo.style.top = "0";
+        logo.style.left = "50%";
+        logo.style.transform = "translate(-50%, 0)";
+        logo.style.filter = 'blur(0px)';
+        logo.style.animation = "none";
         document.getElementById('select-screen').style.display = 'block';
     
         fade.classList.remove('fade-in');
@@ -42,8 +48,27 @@ function enterGame() {
     }, 800);
 }
 
-function updatePlayerCount() {
-    const count = parseInt(document.getElementById('player-count').value);
+document.addEventListener("DOMContentLoaded", () => {
+    const soloImg = document.getElementById("solo-label");
+    const duelImg = document.getElementById("duel-label");
+    const triadImg = document.getElementById("triad-label");
+    const quadImg = document.getElementById("quad-label");
+    const round3Img = document.getElementById("round3");
+    const round5Img = document.getElementById("round5");
+    const round7Img = document.getElementById("round7");
+    const round10Img = document.getElementById("round10");
+
+    soloImg.addEventListener("click", () => updatePlayerCount(1));
+    duelImg.addEventListener("click", () => updatePlayerCount(2));
+    triadImg.addEventListener("click", () => updatePlayerCount(3));
+    quadImg.addEventListener("click", () => updatePlayerCount(4));
+    round3Img.addEventListener("click", () => updateRoundCount(3));
+    round5Img.addEventListener("click", () => updateRoundCount(5));
+    round7Img.addEventListener("click", () => updateRoundCount(7));
+    round10Img.addEventListener("click", () => updateRoundCount(10));
+});
+
+function updatePlayerCount(count) {
     playerCount = count;
     const container = document.getElementById('player-inputs');
     container.innerHTML = '';
@@ -54,20 +79,33 @@ function updatePlayerCount() {
         container.appendChild(label);
         container.appendChild(document.createElement('br'));
     }
+    document.getElementById('mode-screen').style.display = 'none';
+    document.getElementById('select-buttons').style.filter = 'blur(0px)';
+    document.getElementById('logo').style.filter = 'blur(0px)';
 }
-/*
-function updateNameLabel(index) {
-    const value = document.getElementById(`player-${index}-name`).value.trim();
-    document.getElementById(`p${index}-placeholder`).innerText = value || `P${index + 1}`;
+
+function updateRoundCount(count) {
+    totalRounds = count;
+    const container = document.getElementById('round-hyouji');
+    container.innerHTML = `${totalRounds}ラウンド`;
+
+    document.getElementById('round-screen').style.display = 'none';
+    document.getElementById('select-buttons').style.filter = 'blur(0px)';
+    document.getElementById('logo').style.filter = 'blur(0px)';
 }
-*/
+
 function modeSelect() {
     document.getElementById('mode-screen').style.display = 'block';
-    document.getElementById('mode-button').style.filter = 'blur(6px)';
-    document.getElementById('game-start-button').style.filter = 'blur(6px)';
-    document.getElementById('game-start-button').style.filter = 'blur(6px)';
+    document.getElementById('select-buttons').style.filter = 'blur(6px)';
     document.getElementById('logo').style.filter = 'blur(6px)';
 }
+
+function roundSelect() {
+    document.getElementById('round-screen').style.display = 'block';
+    document.getElementById('select-buttons').style.filter = 'blur(6px)';
+    document.getElementById('logo').style.filter = 'blur(6px)';
+}
+
 
 function showLoading() {
     document.getElementById('loading-overlay').style.display = 'flex';
@@ -96,6 +134,7 @@ function startGame() {
     round = 1;
     document.getElementById('select-screen').style.display = 'none';
     document.getElementById('final-result').style.display = 'none';
+    document.getElementById('logo').style.display = 'none';
 
     startRound();
 }
@@ -256,7 +295,7 @@ function submitBothAnswers() {
             const originalIndex = formattedAnswer.length - 1 - i;
             const el = document.getElementById(`digit-${originalIndex}`);
             if (el) el.style.visibility = 'visible';
-        }, i * 200);
+        }, i * 900);
     });
 
     // ▼ 結果表示（正解後）
@@ -266,7 +305,7 @@ function submitBothAnswers() {
             `<br><span class="diff_price">物件はこちら</span><br><a href="${currentUrl}" target="_blank">${bukkenName}</a>`;
         afterReveal.style.opacity = 1;
         document.getElementById('next-round-btn').style.display = 'inline-block';
-    }, formattedAnswer.length * 200 + 1000);
+    }, formattedAnswer.length * 900 + 1000);
 }
 
 function proceedToNextRound() {
