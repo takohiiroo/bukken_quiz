@@ -77,8 +77,18 @@ animateBackground();
 
 function updatePlayerCount(count) {
     playerCount = count;
-    document.getElementById('offline-buttons').style.display = 'none';
-    document.getElementById('round-buttons').style.display = 'block';
+    const offlineButtons = document.getElementById('offline-buttons');
+    const roundButtons = document.getElementById('round-buttons');
+
+    offlineButtons.style.transform = 'translateX(-50%)';
+    offlineButtons.style.opacity = 0;
+    roundButtons.style.display = 'block';
+
+    setTimeout(() => {
+        offlineButtons.style.display = 'none';
+        roundButtons.style.transform = 'translateX(0)';
+        roundButtons.style.opacity = 1;
+    }, 300);
 }
 
 function updateRoundCount(count) {
@@ -88,6 +98,9 @@ function updateRoundCount(count) {
     const playerContainer = document.getElementById('player-inputs');
     playerContainer.innerHTML = '';
 
+    const roundButtons = document.getElementById('round-buttons');
+    const selectButtons = document.getElementById('select-buttons');
+
     for (let i = 0; i < playerCount; i++) {
         const label = document.createElement('label');
         label.innerHTML = `<input type="text" id="player-${i}-name" placeholder="プレイヤー${i + 1}" oninput="updateNameLabel(${i})">`;
@@ -95,19 +108,49 @@ function updateRoundCount(count) {
         playerContainer.appendChild(document.createElement('br'));
     }
 
-    document.getElementById('round-buttons').style.display = 'none';
-    document.getElementById('select-buttons').style.display = 'block';
-    document.getElementById('start-game-btn').style.display = 'block';
+    roundButtons.style.opacity = 0;
+
+    setTimeout(() => {
+        roundButtons.style.display = 'none';
+        setTimeout(() => {
+            roundButtons.style.transform = 'translateX(-50%)';
+            selectButtons.style.display = 'block';
+            selectButtons.style.transform = 'translateX(0)';
+            setTimeout(() => {
+                selectButtons.style.opacity = 1;
+            }, 10);
+        }, 10);
+    }, 500);
 }
 
 function modeSelect() {
-    document.getElementById('select-buttons').style.display = 'none';
-    document.getElementById('mode-buttons').style.display = 'block';
+    const selectButtons = document.getElementById('select-buttons');
+    const modeButtons = document.getElementById('mode-buttons');
+
+    selectButtons.style.transform = 'translateX(-50%)';
+    selectButtons.style.opacity = 0;
+    modeButtons.style.display = 'block';
+    
+    setTimeout(() => {
+        selectButtons.style.display = 'none';
+        modeButtons.style.transform = 'translateX(0)';
+        modeButtons.style.opacity = 1;
+    }, 300);
 }
 
 function offlinePlayers() {
-    document.getElementById('mode-buttons').style.display = 'none';
-    document.getElementById('offline-buttons').style.display = 'block';
+    const modeButtons = document.getElementById('mode-buttons');
+    const offlineButtons = document.getElementById('offline-buttons');
+
+    modeButtons.style.transform = 'translateX(-50%)';
+    modeButtons.style.opacity = 0;
+    offlineButtons.style.display = 'block';
+
+    setTimeout(() => {
+        modeButtons.style.display = 'none';
+        offlineButtons.style.transform = 'translateX(0)';
+        offlineButtons.style.opacity = 1;
+    }, 300);
 }
 
 function showLoading() {

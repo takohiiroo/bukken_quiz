@@ -245,8 +245,25 @@ h2, h3 {
     height: 100%;
 }
 
+
 #hidarigawa {
     position: relative;
+}
+
+#select-buttons {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+#mode-buttons {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+#offline-buttons {
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+#round-buttons {
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .select-button {
@@ -280,6 +297,16 @@ h2, h3 {
 
 .select-button:hover::after {
     transform: scaleX(1);
+}
+
+.show {
+    opacity: 1; /* 不透明にする */
+    transform: translateX(0); /* 元の位置に戻す */
+}
+
+.hide {
+    transform: translateX(-50%); /* 左に大きくずらす */
+    opacity: 0; /* 透明にする */
 }
 
 #round-hyouji {
