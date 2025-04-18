@@ -199,92 +199,95 @@ h2, h3 {
 #select-screen {
     width: 100%;
     height: 100%;
+    position: relative;
+    overflow: hidden;
     z-index: 0;
-    position: absolute;
-    top: 0;
-    left:0;
+}
+
+#haikei {
+    width: 100%;
+    height: 100%;
     background-image: url('/static/img/bg/1_e.png');
-    background-size: cover;
+    background-size: 60vw;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-blend-mode: overlay;
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.65);
 }
 
 #window {
     width: 100vw;
     height: 100vh;
-    background-image: url('/static/img/bg/window.png');
+    background-image: url('/static/img/bg/window_bg.svg');
     background-repeat: no-repeat;
-    background-size: calc(100vw / 0.76) auto; /* ←画像の幅を拡大して窓を画面幅に合わせる */
+    background-size: calc(1.5625 * 100vw + 10vw) auto; /* ←画像の幅を拡大して窓を画面幅に合わせる */
     background-position: center center;        /* 中央の窓が画面中央に来るように */
 }
 
+#ryoumado {
+    width: 48%;
+    height: 53%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    justify-content: space-between;
+}
 
-.four-buttons {
-    width: 100%;
+.mado {
+    width: 46%;
     height: 100%;
+}
+
+#hidarigawa {
+    position: relative;
+}
+
+.select-button {
+    display: flex;
+    justify-content: center;
+    height: 4rem;
+    position: relative;
+    margin: 0 auto;
+    padding: .9em 2em;
+    border: none;
+    border-bottom: 2px solid #9b9c9c;
+    background-color: transparent;
+    color: #333;
+    font-weight: 600;
+    font-size: 1.5em;
+    white-space: nowrap;
+}
+
+.select-button::after {
     position: absolute;
-    top: 0;
+    bottom: -3px;
     left: 0;
-    z-index: 1;
-    background-color: rgba(0, 0, 0, 0.85);
+    transform: scaleX(0);
+    transform-origin: center left;
+    width: 100%;
+    height: 2px;
+    background-color: #333;
+    content: '';
+    transition: transform .3s ease;
 }
 
-.four-buttons label {
-    width: 40%;
-    height: 40%;
-    position: absolute;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-blend-mode: overlay;
+.select-button:hover::after {
+    transform: scaleX(1);
 }
 
-#solo-label {
-    background-image: url('/static/img/solo.jpg');
-    top: 5%;
-    left: 5%;
-}
-
-#duel-label {
-    background-image: url('/static/img/duel.jpg');
-    top: 5%;
-    right: 5%;
-}
-
-#triad-label {
-    background-image: url('/static/img/triad.jpg');
-    bottom: 5%;
-    left: 5%;
-}
-#quad-label {
-    background-image: url('/static/img/quad.jpg');
-    bottom: 5%;
-    right: 5%;
-}
-
-#round3 {
-    background-color: red;
-    top: 5%;
-    left: 5%;
-}
-
-#round5 {
-    background-color: white;
-    top: 5%;
-    right: 5%;
-}
-
-#round7 {
-    background-color: blue;
-    bottom: 5%;
-    left: 5%;
-}
-#round10 {
-    background-color: green;
-    bottom: 5%;
-    right: 5%;
+#round-hyouji {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.5em;
+    padding-top: 0.9em;
+    padding-bottom: 0.9em;
 }
 
 #bukken_mei {
@@ -302,21 +305,22 @@ iframe {
 input[type="text"],
 input[type="number"],
 select {
-    width: 100%;
+    width: 90%;
     max-width: 400px;
-    padding: 0.75rem;
+    padding: 0.9rem;
     margin: 0.5rem 0 1rem;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: none;
     font-size: 1rem;
     box-sizing: border-box;
+    background: none;
+    border-bottom: 2px solid #9b9c9c;
 }
 
 #round-count {
     max-width: 80px;
 }
 
-/* ===== ボタン ===== */
+/* ===== ボタン ===== 
 button {
     padding: 0.75rem 1.5rem;
     font-family : inherit;
@@ -333,19 +337,10 @@ button {
 
 button:hover {
     background-color: #388e3c;
-}
+}*/
 
 #kettei_btn {
     margin: auto;
-}
-
-#select-buttons {
-    position: absolute;
-    height: 90%;
-    width: 95%;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%, 0);
 }
 
 .mode-round-buttons {
@@ -360,32 +355,35 @@ button:hover {
     border: #2d3436 0.3rem solid;
 }
 
-#mode-button {
-}
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.1; }
+    100% { opacity: 1; }
+  }
 
-.select-migigawa{
+#start-game-btn {
+    width: 22%;
+    max-width: 400px;
+    margin:0 auto;
+    padding: .6em 2em;
+    border: 0.3rem solid #333;
+    border-radius: 0.5rem;
+    color: #333;
+    font-size: 1.5em;
+    left: 50%;
+    bottom: 3%;
+    transform: translate(-50%, 0);
     position: absolute;
-    margin: 0;
-    width: 70%;
-    height: 90%;
-    background-color: rgba(255, 255, 255, 0.1);
-    right: 2%;
-    top: 50%;
-    border: #2d3436 0.3rem solid;
+    background: none;
+    font-weight: 600;
+    animation: blink 1.5s infinite;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-#round-button {
-}
-
-#game-start-button {
-    position: absolute;
-    margin: 0;
-    width: 10rem;
-    height: 10rem;
-    background-color: green;
-    right: 1rem;
-    bottom: 2rem;
-    border: #2d3436 0.3rem solid;
+#start-game-btn:hover {
+    background-color: #333 !important;
+    color: #fff !important;
+    animation: none; /* animationを無効化 */
 }
 
 /* ===== ローディングオーバーレイ（中央配置） ===== */
@@ -589,7 +587,7 @@ button:hover {
     background-color: #fafafa;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    z-index: 22; 
+    z-index: 0; 
 }
 
 /* 画像を縦横比維持してリサイズ */

@@ -36,7 +36,6 @@ function enterGame() {
         logo.style.top = "0";
         logo.style.left = "50%";
         logo.style.transform = "translate(-50%, 0)";
-        logo.style.filter = 'blur(0px)';
         logo.style.animation = "none";
         document.getElementById('select-screen').style.display = 'block';
     
@@ -48,64 +47,68 @@ function enterGame() {
     }, 800);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    const soloImg = document.getElementById("solo-label");
-    const duelImg = document.getElementById("duel-label");
-    const triadImg = document.getElementById("triad-label");
-    const quadImg = document.getElementById("quad-label");
-    const round3Img = document.getElementById("round3");
-    const round5Img = document.getElementById("round5");
-    const round7Img = document.getElementById("round7");
-    const round10Img = document.getElementById("round10");
 
-    soloImg.addEventListener("click", () => updatePlayerCount(1));
-    duelImg.addEventListener("click", () => updatePlayerCount(2));
-    triadImg.addEventListener("click", () => updatePlayerCount(3));
-    quadImg.addEventListener("click", () => updatePlayerCount(4));
-    round3Img.addEventListener("click", () => updateRoundCount(3));
-    round5Img.addEventListener("click", () => updateRoundCount(5));
-    round7Img.addEventListener("click", () => updateRoundCount(7));
-    round10Img.addEventListener("click", () => updateRoundCount(10));
+const selectScreen = document.getElementById('haikei');
+
+let targetX = 0.5;
+let targetY = 0.5;
+let currentX = 0.5;
+let currentY = 0.5;
+
+document.addEventListener('mousemove', (e) => {
+  targetX = e.clientX / window.innerWidth;
+  targetY = e.clientY / window.innerHeight;
 });
+
+function animateBackground() {
+  // 慣性だけ残す（中央に戻す処理は削除！）
+  currentX += (targetX - currentX) * 0.08;
+  currentY += (targetY - currentY) * 0.08;
+
+  const moveX = (currentX - 0.5) * 10;
+  const moveY = (currentY - 0.5) * 10;
+
+  selectScreen.style.backgroundPosition = `calc(50% + ${moveX}%) calc(50% + ${moveY}%)`;
+
+  requestAnimationFrame(animateBackground);
+}
+
+animateBackground();
 
 function updatePlayerCount(count) {
     playerCount = count;
-    const container = document.getElementById('player-inputs');
-    container.innerHTML = '';
-
-    for (let i = 0; i < playerCount; i++) {
-        const label = document.createElement('label');
-        label.innerHTML = `<input type="text" id="player-${i}-name" placeholder="P${i + 1}" oninput="updateNameLabel(${i})">`;
-        container.appendChild(label);
-        container.appendChild(document.createElement('br'));
-    }
-    document.getElementById('mode-screen').style.display = 'none';
-    document.getElementById('select-buttons').style.filter = 'blur(0px)';
-    document.getElementById('logo').style.filter = 'blur(0px)';
+    document.getElementById('offline-buttons').style.display = 'none';
+    document.getElementById('round-buttons').style.display = 'block';
 }
 
 function updateRoundCount(count) {
     totalRounds = count;
-    const container = document.getElementById('round-hyouji');
-    container.innerHTML = `${totalRounds}ラウンド`;
+    const roundContainer = document.getElementById('round-hyouji');
+    roundContainer.innerHTML = `${totalRounds}ラウンド`;
+    const playerContainer = document.getElementById('player-inputs');
+    playerContainer.innerHTML = '';
 
-    document.getElementById('round-screen').style.display = 'none';
-    document.getElementById('select-buttons').style.filter = 'blur(0px)';
-    document.getElementById('logo').style.filter = 'blur(0px)';
+    for (let i = 0; i < playerCount; i++) {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="text" id="player-${i}-name" placeholder="プレイヤー${i + 1}" oninput="updateNameLabel(${i})">`;
+        playerContainer.appendChild(label);
+        playerContainer.appendChild(document.createElement('br'));
+    }
+
+    document.getElementById('round-buttons').style.display = 'none';
+    document.getElementById('select-buttons').style.display = 'block';
+    document.getElementById('start-game-btn').style.display = 'block';
 }
 
 function modeSelect() {
-    document.getElementById('mode-screen').style.display = 'block';
-    document.getElementById('select-buttons').style.filter = 'blur(6px)';
-    document.getElementById('logo').style.filter = 'blur(6px)';
+    document.getElementById('select-buttons').style.display = 'none';
+    document.getElementById('mode-buttons').style.display = 'block';
 }
 
-function roundSelect() {
-    document.getElementById('round-screen').style.display = 'block';
-    document.getElementById('select-buttons').style.filter = 'blur(6px)';
-    document.getElementById('logo').style.filter = 'blur(6px)';
+function offlinePlayers() {
+    document.getElementById('mode-buttons').style.display = 'none';
+    document.getElementById('offline-buttons').style.display = 'block';
 }
-
 
 function showLoading() {
     document.getElementById('loading-overlay').style.display = 'flex';
@@ -124,7 +127,6 @@ function startGame() {
     playerNames = names;
 
     gameMode = (playerCount === 1) ? 'single' : 'multi';
-    totalRounds = parseInt(document.getElementById('round-count').value);
 
     scores = {};
     for (let key in playerNames) {

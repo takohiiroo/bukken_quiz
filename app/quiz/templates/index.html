@@ -21,35 +21,38 @@
         <button id="start-button" onclick="enterGame()">START</button>
     </div>
 
-    <div class="four-buttons" id="mode-screen" style="display: none;">
-        <label id="solo-label"></label>
-
-        <label id="duel-label"></label>
- 
-        <label id="triad-label"></label>
- 
-        <label id="quad-label"></label>
-    </div>
-
-    <div class="four-buttons" id="round-screen" style="display: none;">
-        <label id="round3">3ラウンド</label>
-
-        <label id="round5">5ラウンド</label>
- 
-        <label id="round7">7ラウンド</label>
- 
-        <label id="round10">10ラウンド</label>
-    </div>
-
     <div id="select-screen" style="display: none;">
+        <div id="haikei"></div>
         <div id="window"></div>
-        <!-- ▼ プレイヤー人数だけに統一 -->
-            <div id="select-buttons">
-                <!-- <div class="select-migigawa" id="player-inputs"></div> -->
-                <button class="mode-round-buttons" id="mode-button" onclick="modeSelect()">MODE</button>
-                <!-- <button class="mode-round-buttons" id="round-button" onclick="roundSelect()">ROUND</button> -->
-                <button id="game-start-button" onclick="startGame()">START</button>
+        <div id="ryoumado" style="display: flex;">
+            <div class="mado" id="hidarigawa">
+                <div id="select-buttons" style="display: block">
+                    <button class="select-button" id="select-button1" onclick="modeSelect()">ゲームモード</button>
+                    <button class="select-button" id="select-button2" onclick="">設定</button>
+                </div>
+                <div id="mode-buttons" style="display: none;">
+                    <button class="select-button" id="mode-button1" onclick="offlinePlayers()">オフラインモード</button>
+                    <button class="select-button" id="mode-button2" onclick="">オンラインモード</button>
+                </div>
+                <div id="offline-buttons" style="display: none;">
+                    <button class="select-button" id="mode-button1" onclick="updatePlayerCount(1)">一人プレイ</button>
+                    <button class="select-button" id="mode-button2" onclick="updatePlayerCount(2)">二人プレイ</button>
+                    <button class="select-button" id="mode-button1" onclick="updatePlayerCount(3)">三人プレイ</button>
+                    <button class="select-button" id="mode-button2" onclick="updatePlayerCount(4)">四人プレイ</button>
+                </div>
+                <div id="round-buttons" style="display: none;">
+                    <button class="select-button" id="mode-button1" onclick="updateRoundCount(3)">３ラウンド</button>
+                    <button class="select-button" id="mode-button2" onclick="updateRoundCount(5)">５ラウンド</button>
+                    <button class="select-button" id="mode-button1" onclick="updateRoundCount(7)">７ラウンド</button>
+                    <button class="select-button" id="mode-button2" onclick="updateRoundCount(10)">10ラウンド</button>
+                </div>
             </div>
+            <div class="mado" id="migigawa">
+                <div id="round-hyouji"></div>
+                <div id="player-inputs"></div>
+            </div>
+        </div>
+        <button id="start-game-btn" style="display: none;" onclick="startGame()">ゲームスタート</button>
     </div>
 
     <div id="quiz-area" style="display: none;">
