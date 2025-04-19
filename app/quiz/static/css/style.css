@@ -171,7 +171,7 @@ h2, h3 {
 #final-result {
     background-color: white;
     border-radius: 16px;
-    max-width: 600px;
+    max-width: 50%;
     margin: 2rem auto;
     padding: 2rem;
     box-shadow: 0 10px 25px rgba(0,0,0,0.1);
@@ -218,7 +218,8 @@ h2, h3 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.65);
+    background-color: rgba(255, 255, 255, 0.2);
+    filter: blur(7px);
 }
 
 #window {
@@ -250,10 +251,6 @@ h2, h3 {
     position: relative;
 }
 
-#select-buttons {
-    transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
 #mode-buttons {
     transition: transform 0.2s ease, opacity 0.2s ease;
 }
@@ -269,10 +266,9 @@ h2, h3 {
 .select-button {
     display: flex;
     justify-content: center;
-    height: 4rem;
     position: relative;
     margin: 0 auto;
-    padding: .9em 2em;
+    padding: .8em 2em;
     border: none;
     border-bottom: 2px solid #9b9c9c;
     background-color: transparent;
@@ -315,12 +311,13 @@ h2, h3 {
     font-size: 1.5em;
     padding-top: 0.9em;
     padding-bottom: 0.9em;
+    transition: opacity 0.2s ease;
+    opacity: 0;
 }
 
-#bukken_mei {
-    font-weight: bold;
-    font-size: 2rem;
-    margin: 0;
+#player-inputs {
+    transition: opacity 0.2s ease;
+    opacity: 0;
 }
 
 iframe {
@@ -393,23 +390,24 @@ button:hover {
     max-width: 400px;
     margin:0 auto;
     padding: .6em 2em;
-    border: 0.3rem solid #333;
+    border: none;
     border-radius: 0.5rem;
-    color: #333;
     font-size: 1.5em;
+    background-color: #333;
+    color: #fff;
     left: 50%;
     bottom: 3%;
     transform: translate(-50%, 0);
     position: absolute;
-    background: none;
     font-weight: 600;
     animation: blink 1.5s infinite;
     transition: background-color 0.3s ease, color 0.3s ease;
+    box-shadow: 0.2rem 0.2rem black;
 }
 
 #start-game-btn:hover {
-    background-color: #333 !important;
-    color: #fff !important;
+    background-color: #fff;
+    color: #333;
     animation: none; /* animationを無効化 */
 }
 
@@ -441,6 +439,20 @@ button:hover {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+#quiz-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.quiz-migihidari {
+    width: 48%;
+}
+
+#map-info {
+    
 }
 
 /* ===== 結果表示 ===== */

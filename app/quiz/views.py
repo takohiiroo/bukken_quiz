@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from django.http import JsonResponse
 import urllib
+import re
 
 def get_bukken(request):
     #最大10回までリトライ
@@ -41,65 +42,93 @@ def get_bukken(request):
     
             soup = BeautifulSoup(response.text, 'html.parser')
             bukken_list = soup.select('.cassetteitem')
+
+            bc_url_list = soup.select('.js-cassette_link_href')
+            bc_url = random.choice(bc_url_list).get('href')
     
+            shosai_url = urllib.parse.urljoin(abs_url, bc_url) 
+
             if not bukken_list:
-                #return JsonResponse({'error': '情報を取得できませんでした。'}, status=400)
+                return JsonResponse({'error': '情報を取得できませんでした。'}, status=400)
+                continue
+            
+            if not shosai_url:
+                return JsonResponse({'error': '情報を取得できませんでした。'}, status=400)
                 continue 
-            selected = random.choice(bukken_list)
-    
+            page_response = requests.get(shosai_url, headers=headers)
+            page_response.encoding = page_response.apparent_encoding
+            
+            selected = BeautifulSoup(page_response.text, 'html.parser')
+
+            td = selected.select('.property_view_table td')
+            yachin_kanri = selected.select('.property_view_note-info span')
+            bukken_gaiyou = selected.select('.table_gaiyou td')
+
             # 建物情報
             data_home = {
-                'address': selected.select_one('.cassetteitem_detail-col1').get_text(strip=True),
-                'name': selected.select_one('.cassetteitem_content-title').get_text(strip=True),
-                'station': selected.select_one('.cassetteitem_detail-col2').get_text(strip=True),
-                'age': selected.select_one('.cassetteitem_detail-col3').get_text(strip=True),
+                'address': td[0].get_text(strip=True),
+                'name': selected.select_one('.section_h1-header-title').get_text(strip=True),
+                'station': td[1].get_text(strip=True),
+                'age': td[4].get_text(strip=True),
+                'kozo': bukken_gaiyou[1].get_text(strip=True),
+                'energy': bukken_gaiyou[4].get_text(strip=True),
+                'dannetsu': bukken_gaiyou[5].get_text(strip=True),
+                'meyasukonetsuhi': selected.select('.table_gaiyou ul')[3].get_text(strip=True),
+                'sonpo': bukken_gaiyou[7].get_text(strip=True),
+                'parking': bukken_gaiyou[8].get_text(strip=True),
+                'nyukyo': bukken_gaiyou[9].get_text(strip=True),
+                'torihikikeitai': bukken_gaiyou[10].get_text(strip=True),
+                'joken': bukken_gaiyou[11].get_text(strip=True),
+                'sokosu': bukken_gaiyou[14].get_text(strip=True),
+                'hoshogaisha': selected.select('.table_gaiyou tr')[9].select_one('ul').get_text(strip=True),
+                'shokihiyo': selected.select('.table_gaiyou tr')[10].select_one('ul').get_text(strip=True),
             }
-    
-            # 部屋情報（最初の1つだけ使う）
-            room_table = selected.select_one('.cassetteitem_other')
-            first_row = room_table.select_one('tbody tr')
-            td = first_row.select('td')
-    
-            room_floor = td[2].get_text(strip=True)
-            rent = td[3].select_one('.cassetteitem_price--rent').get_text(strip=True)
-            kanri = td[3].select_one('.cassetteitem_price--administration').get_text(strip=True)
-            deposit = td[4].select_one('.cassetteitem_price--deposit').get_text(strip=True)
-            gratuity = td[4].select_one('.cassetteitem_price--gratuity').get_text(strip=True)
-            get_url = td[8].find(class_= 'js-cassette_link_href').get('href')
-    
+
+            rent = selected.select_one('.property_view_note-emphasis').get_text(strip=True)
+            kanri = yachin_kanri[1].get_text(strip=True)
             # 家賃・管理費を数値に変換
             if '万円' in rent:
                 y = int(float(rent.replace('万円', '').replace('-', '0')) * 10000)
             else:
-                #return JsonResponse({'error': '家賃の形式が不正です'}, status=400)
+                return JsonResponse({'error': '家賃の形式が不正です'}, status=400)
                 continue
 
-            if kanri == '-':
+            if kanri.endswith('-'):
                 z = 0  # "-" の場合は0円扱い
             elif kanri.endswith('円'):
-                cleaned = kanri.replace(',', '').replace('円', '')
-                if cleaned.isdigit():
-                    z = int(cleaned)  # 数値の場合（例: "5,000円" → 5000）
+                cleaned = re.findall(r'\d+', kanri.replace(',', ''))
+                if len(cleaned) == 1:
+                    z = int(cleaned[0])  # 数値の場合（例: "5,000円" → 5000）
                 else:
-                    #return JsonResponse({'error': '管理費の数値が不正です'}, status=400)
+                    return JsonResponse({'error': '管理費の数値が不正です'}, status=400)
                     continue
             else:
-                #return JsonResponse({'error': '管理費の形式が不正です（"円"を含む必要があります）'}, status=400)
+                return JsonResponse({'error': '管理費の形式が不正です（"円"を含む必要があります）'}, status=400)
                 continue
 
-            #リンク作成
-            url = urllib.parse.urljoin(abs_url, get_url) 
+            # まずimgタグたちを取得
+            img_url_tags = selected.select('#js-view_gallery-list img')
+            # data-srcをリストにまとめる
+            src_list = [img_url_tags.get('data-src') for img_url_tags in img_url_tags if img_url_tags.get('data-src')]
+            # リストをカンマ区切りの文字列にする
+            img_urls = ",".join(src_list)
 
+            #リンク作成
             data_room = {
-                'room_floor': room_floor,
+                'room_floor': bukken_gaiyou[2].get_text(strip=True),
                 'rent': rent,
                 'kanri': kanri,
-                'deposit': deposit,
-                'gratuity': gratuity,
-                'layout': td[5].select_one('.cassetteitem_madori').get_text(strip=True),
-                'size': td[5].select_one('.cassetteitem_menseki').get_text(strip=True),
-                'url': url,
-                'img_urls': td[1].find(class_= 'js-view_gallery_images').get('data-imgs')
+                'layout': td[2].get_text(strip=True),
+                'size': td[3].get_text(strip=True),
+                'url': shosai_url,
+                'img_urls': img_urls,
+                'muki': td[6].get_text(strip=True),
+                'tokucho': selected.select_one('#bkdt-option li').get_text(strip=True),
+                'madori': bukken_gaiyou[0].get_text(strip=True),
+                'shikikin': yachin_kanri[2].get_text(strip=True),
+                'reikin': yachin_kanri[3].get_text(strip=True),
+                'hoshokin': yachin_kanri[4].get_text(strip=True),
+                'shikibiki': yachin_kanri[5].get_text(strip=True),
             }
     
             return JsonResponse({

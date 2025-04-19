@@ -26,13 +26,10 @@
         <div id="window"></div>
         <div id="ryoumado" style="display: flex;">
             <div class="mado" id="hidarigawa">
-                <div id="select-buttons" style="display: block">
-                    <button class="select-button" id="select-button1" onclick="modeSelect()">ゲームモード</button>
-                    <button class="select-button" id="select-button2" onclick="">設定</button>
-                </div>
-                <div id="mode-buttons" style="display: none; transform: translateX(-50%); opacity: 0;">
+                <div id="mode-buttons" style="display: block;">
                     <button class="select-button" id="mode-button1" onclick="offlinePlayers()">オフラインモード</button>
-                    <button class="select-button" id="mode-button2" onclick="">オンラインモード</button>
+                    <button class="select-button" id="mode-button2" onclick="startOnlineMode()">オンラインモード</button>
+                    <button class="select-button" id="select-button2" onclick="">設定</button>
                 </div>
                 <div id="offline-buttons" style="display: none; transform: translateX(-50%); opacity: 0;">
                     <button class="select-button" id="mode-button1" onclick="updatePlayerCount(1)">一人プレイ</button>
@@ -48,6 +45,7 @@
                 </div>
             </div>
             <div class="mado" id="migigawa">
+                <div id="game-mode"></div>
                 <div id="round-hyouji"></div>
                 <div id="player-inputs"></div>
             </div>
@@ -57,15 +55,20 @@
 
     <div id="quiz-area" style="display: none;">
         <h2 id="round-info"></h2>
-        <div id="image-carousel-wrapper">
-            <button id="carousel-prev" class="carousel-btn">←</button>
-            <div id="image-carousel" class="carousel"></div>
-            <button id="carousel-next" class="carousel-btn">→</button>
+        <div id="quiz-info">
+            <div class="quiz-migihidari" id="quiz-hidarigawa">
+                <div id="image-carousel-wrapper">
+                    <button id="carousel-prev" class="carousel-btn">←</button>
+                    <div id="image-carousel" class="carousel"></div>
+                    <button id="carousel-next" class="carousel-btn">→</button>
+                </div>
+                <div id="map-info"></div>
+            </div>
+            <div class="quiz-migihidari" id="quiz-migigawa">
+                <p id="bukken-info"></p>
+            </div>
         </div>
-        <p id="bukken-info"></p>
-
         <div id="player-answers"></div>
-
         <button id="kettei_btn" style="display: none;" onclick="submitBothAnswers()">決定</button>
         <p id="result"></p>
 

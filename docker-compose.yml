@@ -11,25 +11,17 @@ services:
   web:
     build: .
     container_name: bukken_quiz_web 
-    volumes:
-      - ./app:/app  # ホストのappディレクトリをマウント
     ports:
       - "8000:8000"
+    volumes:
+      - ./app:/app  # ホストのappディレクトリをマウント
     depends_on:
       - db
     env_file:
       - .env  # ← .env を使う
     # コンテナ起動時にDjangoプロジェクトを生成（既存でない場合）
     command: >
-      sh -c "
-        if [ ! -f /app/manage.py ]; then
-          pip install django &&
-          django-admin startproject bukken_quiz_web /app &&
-          cd /app &&
-          python manage.py migrate
-        fi &&
-        gunicorn --bind 0.0.0.0:8000 bukken_quiz_web.wsgi:application
-      "
+        daphne -b 0.0.0.0 -p 8000 bukken_quiz_web.asgi:application
 
 volumes:
   db_data:

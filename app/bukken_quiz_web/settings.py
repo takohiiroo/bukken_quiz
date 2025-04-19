@@ -67,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'bukken_quiz_web.wsgi.application'
+ASGI_APPLICATION = 'bukken_quiz_web.asgi.application'
 
 
 # Database
@@ -79,6 +79,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation

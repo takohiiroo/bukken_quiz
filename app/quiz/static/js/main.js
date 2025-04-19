@@ -92,50 +92,44 @@ function updatePlayerCount(count) {
 }
 
 function updateRoundCount(count) {
-    totalRounds = count;
     const roundContainer = document.getElementById('round-hyouji');
-    roundContainer.innerHTML = `${totalRounds}ラウンド`;
     const playerContainer = document.getElementById('player-inputs');
-    playerContainer.innerHTML = '';
-
     const roundButtons = document.getElementById('round-buttons');
-    const selectButtons = document.getElementById('select-buttons');
+    const modeButtons = document.getElementById('mode-buttons');
+    const startGameBtn = document.getElementById('start-game-btn');
+    totalRounds = count;
 
-    for (let i = 0; i < playerCount; i++) {
-        const label = document.createElement('label');
-        label.innerHTML = `<input type="text" id="player-${i}-name" placeholder="プレイヤー${i + 1}" oninput="updateNameLabel(${i})">`;
-        playerContainer.appendChild(label);
-        playerContainer.appendChild(document.createElement('br'));
-    }
+    roundContainer.style.opacity = 0;
+    playerContainer.style.opacity = 0;
+
+    setTimeout(() => {
+        roundContainer.innerHTML = `${totalRounds}ラウンド`;
+        playerContainer.innerHTML = '';
+
+        for (let i = 0; i < playerCount; i++) {
+            const label = document.createElement('label');
+            label.innerHTML = `<input type="text" id="player-${i}-name" placeholder="プレイヤー${i + 1}">`;
+            playerContainer.appendChild(label);
+            playerContainer.appendChild(document.createElement('br'));
+        }
+    }, 500);
 
     roundButtons.style.opacity = 0;
 
     setTimeout(() => {
         roundButtons.style.display = 'none';
+        roundContainer.style.opacity = 1;
+        playerContainer.style.opacity = 1;
         setTimeout(() => {
             roundButtons.style.transform = 'translateX(-50%)';
-            selectButtons.style.display = 'block';
-            selectButtons.style.transform = 'translateX(0)';
+            modeButtons.style.display = 'block';
+            modeButtons.style.transform = 'translateX(0)';
             setTimeout(() => {
-                selectButtons.style.opacity = 1;
+                modeButtons.style.opacity = 1;
+                startGameBtn.style.display = 'block';
             }, 10);
         }, 10);
     }, 500);
-}
-
-function modeSelect() {
-    const selectButtons = document.getElementById('select-buttons');
-    const modeButtons = document.getElementById('mode-buttons');
-
-    selectButtons.style.transform = 'translateX(-50%)';
-    selectButtons.style.opacity = 0;
-    modeButtons.style.display = 'block';
-    
-    setTimeout(() => {
-        selectButtons.style.display = 'none';
-        modeButtons.style.transform = 'translateX(0)';
-        modeButtons.style.opacity = 1;
-    }, 300);
 }
 
 function offlinePlayers() {
@@ -244,25 +238,44 @@ function startRound() {
             };
 
             const info = `
-                <p id="bukken_mei">${bukkenName}</p><br>
+                <p style="font-weight:bold;">物件情報</p>
                 住所: ${data.data_home.address}<br>
                 最寄り駅: ${data.data_home.station}<br>
                 築年数: ${data.data_home.age}<br>
+                構造: ${data.data_home.kozo}<br>
+                エネルギー消費性能: ${data.data_home.energy}<br>
+                断熱性能: ${data.data_home.dannetsu}<br>
+                目安光熱費: ${data.data_home.meyasukonetsuhi}<br>
+                損保: ${data.data_home.sonpo}<br>
+                駐車場: ${data.data_home.parking}<br>
+                入居: ${data.data_home.nyukyo}<br>
+                取引態様: ${data.data_home.torihikikeitai}<br>
+                取引態様: ${data.data_home.torihikikeitai}<br>
+                条件: ${data.data_home.joken}<br>
+                総戸数: ${data.data_home.sokosu}<br>
+                保証会社: ${data.data_home.hoshogaisha}<br>
+                ほか初期費用: ${data.data_home.shokihiyo}<br>
+                <p style="font-weight:bold;">部屋情報</p>
                 階数: ${data.data_room.room_floor}<br>
-                間取り: ${data.data_room.layout}<br>
+                間取り: ${data.data_room.layout}${data.data_room.madori}<br>
                 面積: ${data.data_room.size}<br>
+                向き：${data.data_room.muki}<br>
+                特徴： ${data.data_room.tokucho}<br>
+            `;
+            document.getElementById('bukken-info').innerHTML = info;
+            document.getElementById('map-info').innerHTML = `
                 <iframe
                     loading="lazy"
                     allowfullscreen
                     referrerpolicy="no-referrer-when-downgrade"
                     src="https://www.google.com/maps?q=${data.data_home.address}&output=embed">
                 </iframe>
-            `;
-            document.getElementById('bukken-info').innerHTML = info;
+            `;            
         })
         .catch(err => {
+            console.log(currentUrl);
             hideLoading();
-            alert("エラーが発生しました。")
+            alert(`エラーが発生しました。${currentUrl}`)
         });
 }
 

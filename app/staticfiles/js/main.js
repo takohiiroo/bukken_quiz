@@ -8,6 +8,12 @@ let currentUrl = '';
 let bukkenName = '';
 let gameMode = 'multi';
 
+// --- オンラインモード用変数を追加 ---
+let socket = null;
+let roomName = "testroom";  // 仮で固定。あとで入力式にもできる
+let playerName = "";        // プレイヤー名（仮置き）
+let isOnlineMode = false;   // オンラインモード中かどうか
+
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(() => {
     const logo = document.getElementById("logo");
@@ -92,50 +98,44 @@ function updatePlayerCount(count) {
 }
 
 function updateRoundCount(count) {
-    totalRounds = count;
     const roundContainer = document.getElementById('round-hyouji');
-    roundContainer.innerHTML = `${totalRounds}ラウンド`;
     const playerContainer = document.getElementById('player-inputs');
-    playerContainer.innerHTML = '';
-
     const roundButtons = document.getElementById('round-buttons');
-    const selectButtons = document.getElementById('select-buttons');
+    const modeButtons = document.getElementById('mode-buttons');
+    const startGameBtn = document.getElementById('start-game-btn');
+    totalRounds = count;
 
-    for (let i = 0; i < playerCount; i++) {
-        const label = document.createElement('label');
-        label.innerHTML = `<input type="text" id="player-${i}-name" placeholder="プレイヤー${i + 1}" oninput="updateNameLabel(${i})">`;
-        playerContainer.appendChild(label);
-        playerContainer.appendChild(document.createElement('br'));
-    }
+    roundContainer.style.opacity = 0;
+    playerContainer.style.opacity = 0;
+
+    setTimeout(() => {
+        roundContainer.innerHTML = `${totalRounds}ラウンド`;
+        playerContainer.innerHTML = '';
+
+        for (let i = 0; i < playerCount; i++) {
+            const label = document.createElement('label');
+            label.innerHTML = `<input type="text" id="player-${i}-name" placeholder="プレイヤー${i + 1}">`;
+            playerContainer.appendChild(label);
+            playerContainer.appendChild(document.createElement('br'));
+        }
+    }, 500);
 
     roundButtons.style.opacity = 0;
 
     setTimeout(() => {
         roundButtons.style.display = 'none';
+        roundContainer.style.opacity = 1;
+        playerContainer.style.opacity = 1;
         setTimeout(() => {
             roundButtons.style.transform = 'translateX(-50%)';
-            selectButtons.style.display = 'block';
-            selectButtons.style.transform = 'translateX(0)';
+            modeButtons.style.display = 'block';
+            modeButtons.style.transform = 'translateX(0)';
             setTimeout(() => {
-                selectButtons.style.opacity = 1;
+                modeButtons.style.opacity = 1;
+                startGameBtn.style.display = 'block';
             }, 10);
         }, 10);
     }, 500);
-}
-
-function modeSelect() {
-    const selectButtons = document.getElementById('select-buttons');
-    const modeButtons = document.getElementById('mode-buttons');
-
-    selectButtons.style.transform = 'translateX(-50%)';
-    selectButtons.style.opacity = 0;
-    modeButtons.style.display = 'block';
-    
-    setTimeout(() => {
-        selectButtons.style.display = 'none';
-        modeButtons.style.transform = 'translateX(0)';
-        modeButtons.style.opacity = 1;
-    }, 300);
 }
 
 function offlinePlayers() {
@@ -244,29 +244,102 @@ function startRound() {
             };
 
             const info = `
-                <p id="bukken_mei">${bukkenName}</p><br>
+                <p style="font-weight:bold;">物件情報</p>
                 住所: ${data.data_home.address}<br>
                 最寄り駅: ${data.data_home.station}<br>
                 築年数: ${data.data_home.age}<br>
+                構造: ${data.data_home.kozo}<br>
+                エネルギー消費性能: ${data.data_home.energy}<br>
+                断熱性能: ${data.data_home.dannetsu}<br>
+                目安光熱費: ${data.data_home.meyasukonetsuhi}<br>
+                損保: ${data.data_home.sonpo}<br>
+                駐車場: ${data.data_home.parking}<br>
+                入居: ${data.data_home.nyukyo}<br>
+                取引態様: ${data.data_home.torihikikeitai}<br>
+                取引態様: ${data.data_home.torihikikeitai}<br>
+                条件: ${data.data_home.joken}<br>
+                総戸数: ${data.data_home.sokosu}<br>
+                保証会社: ${data.data_home.hoshogaisha}<br>
+                ほか初期費用: ${data.data_home.shokihiyo}<br>
+                <p style="font-weight:bold;">部屋情報</p>
                 階数: ${data.data_room.room_floor}<br>
-                間取り: ${data.data_room.layout}<br>
+                間取り: ${data.data_room.layout}${data.data_room.madori}<br>
                 面積: ${data.data_room.size}<br>
+                向き：${data.data_room.muki}<br>
+                特徴： ${data.data_room.tokucho}<br>
+            `;
+            document.getElementById('bukken-info').innerHTML = info;
+            document.getElementById('map-info').innerHTML = `
                 <iframe
                     loading="lazy"
                     allowfullscreen
                     referrerpolicy="no-referrer-when-downgrade"
                     src="https://www.google.com/maps?q=${data.data_home.address}&output=embed">
                 </iframe>
-            `;
-            document.getElementById('bukken-info').innerHTML = info;
+            `;            
         })
         .catch(err => {
+            console.log(currentUrl);
             hideLoading();
-            alert("エラーが発生しました。")
+            alert(`エラーが発生しました。${currentUrl}`)
         });
 }
 
+// --- submitBothAnswers関数（回答を送る or まとめる）---
 function submitBothAnswers() {
+    const answer = getMyAnswer(); // あなたの現在の回答取得処理に合わせる
+
+    if (isOnlineMode) {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            console.log("オンライン回答送信:", answer);
+
+            myAnswer = answer;  // 自分の回答を一時保存
+            socket.send(JSON.stringify({
+                type: "answer",
+                answer: answer
+            }));
+
+            document.getElementById('kettei_btn').style.display = 'none'; // 決定ボタンを隠す
+        } else {
+            console.error("WebSocketがオープンしていません！");
+        }
+    } else {
+        // オフラインモードなら今まで通り
+        processLocalAnswers(); // もともとsubmitBothAnswersでやってた処理をここにまとめる
+    }
+}
+
+// --- receiveOpponentAnswer関数（相手の回答受信）---
+let myAnswer = null;
+let opponentAnswer = null;
+
+function receiveOpponentAnswer(answer) {
+    console.log("相手の回答を受信:", answer);
+    opponentAnswer = answer;
+
+    if (myAnswer !== null && opponentAnswer !== null) {
+        processOnlineAnswers(); // 両方そろったら処理する
+    }
+}
+
+// --- processOnlineAnswers関数（オンライン回答揃ったら処理）---
+function processOnlineAnswers() {
+    console.log("オンライン回答処理開始");
+    console.log("自分の回答:", myAnswer);
+    console.log("相手の回答:", opponentAnswer);
+
+    // ここで勝敗計算・表示などを行う（オフラインの流れを参考に作る）
+    // 例：差分を計算してスコア加算するなど
+
+    // --- あとでここに実際の勝敗判定ロジックを書く ---
+
+    // 処理が終わったら、次のターン用にリセット
+    myAnswer = null;
+    opponentAnswer = null;
+}
+
+
+function processLocalAnswers() {
     const answers = {};
     const diffs = {};
     let allAnswered = true;
@@ -403,3 +476,40 @@ function retryGame() {
     document.getElementById('final-result').style.display = 'none';
 }
 
+// --- startOnlineMode関数（オンラインモード開始処理）---
+function startOnlineMode() {
+    console.log("オンラインモード開始");
+    isOnlineMode = true;
+
+    socket = new WebSocket(`ws://${window.location.hostname}:8000/ws/game/${roomName}/`);
+
+    socket.onopen = () => {
+        console.log("WebSocket Connected!");
+
+        socket.send(JSON.stringify({
+            type: "join",
+            name: playerName || "NoName"
+        }));
+    };
+
+    socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("受信データ:", data);
+
+        if (data.type === "match_success") {
+            console.log("マッチング成功！ゲーム開始！");
+            startGame();  // マッチング完了したらゲーム開始！
+        } 
+        else if (data.type === "answer") {
+            receiveOpponentAnswer(data.answer);  // 相手の回答を受信
+        }
+    };
+
+    socket.onerror = (error) => {
+        console.error("WebSocket Error:", error);
+    };
+
+    socket.onclose = () => {
+        console.log("WebSocket Disconnected.");
+    };
+}
